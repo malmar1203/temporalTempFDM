@@ -3,6 +3,7 @@ package main
 
 import (
     "fmt"
+    "os"
 )
 
 const (
@@ -31,6 +32,21 @@ func main (){
                     (grid[i+1][j] - 2*grid[i][j] + grid[i-1][j])/(dx*dx) +
                     (grid[i][j+1] - 2*grid[i][j] + grid[i][j-1])/(dx*dx))
             }
+        }
+        //print grid to a file
+        filename := fmt.Sprintf("step_%04d.txt", t)
+        file, err := os.Create(filename)
+        if err != nil {
+            fmt.Println("Error creating file:", err)
+            return
+        }
+        defer file.Close()
+
+        for i:=0; i<N; i++ {
+            for j:=0; j<N; j++ {
+                fmt.Fprintf(file, "%6.2f ", grid[i][j])
+            }
+            fmt.Fprintln(file)
         }
         //swap grids
         grid, nextGrid = nextGrid, grid
